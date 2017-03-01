@@ -3,8 +3,7 @@
     <item
         android:id="@+id/rename_gesture"
         android:title="@string/rename"
-        android:onClick="renameButtonClick"
-        />
+        android:onClick="renameButtonClick" />
     <item
         android:id="@+id/delete_gesture"
         android:title="@string/delete"

@@ -119,7 +119,6 @@ public class GestureListActivity extends Activity {
         gLib.removeEntry(mCurrentGestureNaam);
         gLib.save();
         mCurrentGestureNaam = "";
-
         onResume();
     }
 

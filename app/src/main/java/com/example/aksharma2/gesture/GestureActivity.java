@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import pack.GestureApp.R;
 
@@ -24,6 +25,13 @@ public class GestureActivity extends Activity {
         openOptionsMenu();
        gesture_lib = GestureLibraries.fromFile(getExternalFilesDir(null) + "/" + "gesture.txt");
        gesture_lib.load();
+        Set<String> gestureSet = gesture_lib.getGestureEntries();
+        for(String gestureName : gestureSet){
+            if(gestureName.equalsIgnoreCase("infinity")){
+                Log.i("infinity", "exists");
+            }
+        }
+        gesture_lib.getGestures("infini");
 
         GestureOverlayView gestures = (GestureOverlayView) findViewById(R.id.gestures);
         gestures.addOnGesturePerformedListener(gestureListener);

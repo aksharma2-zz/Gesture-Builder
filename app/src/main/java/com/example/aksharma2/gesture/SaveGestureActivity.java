@@ -16,6 +16,8 @@ import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Set;
+
 import pack.GestureApp.R;
 
 public class SaveGestureActivity extends Activity  {
@@ -83,7 +85,7 @@ public class SaveGestureActivity extends Activity  {
 
             case R.id.Save:
                 if(mGestureDrawn){
-                    getName();
+                    getName("");
                 } else{
                     showToast(getString(R.string.no_gesture));
                 }
@@ -109,13 +111,15 @@ public class SaveGestureActivity extends Activity  {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getName() {
+    private void getName(String name) {
         AlertDialog.Builder namePopup = new AlertDialog.Builder(this);
         namePopup.setTitle(getString(R.string.enter_name));
         //namePopup.setMessage(R.string.enter_name);
 
         final EditText nameField = new EditText(this);
+        nameField.setText(name);
         namePopup.setView(nameField);
+        namePopup.setIcon(R.mipmap.ic_alert);
         namePopup.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -124,7 +128,7 @@ public class SaveGestureActivity extends Activity  {
                     mGesturename = nameField.getText().toString();
                     saveGesture();
                 } else {
-                    getName();  //TODO : set name field with old name string user added
+                    getName("");  //TODO : set name field with old name string user added
                     showToast(getString(R.string.invalid_name));
                 }
                 //return;
@@ -153,6 +157,13 @@ public class SaveGestureActivity extends Activity  {
         //gLib = GestureLibraries.fromFile(getExternalFilesDir(null) + "/" + "gesture.txt");
         //gLib.load();
         //TODO: check kar k same naam valu gesture che k nai
+
+        if(checkExistingName(mGesturename)){
+            showToast("Gesture name already exists");
+            getName(mGesturename);
+            return;
+        }
+
         gLib.addGesture(mGesturename, mCurrentGesture);
         if (!gLib.save()) {
             Log.e(TAG, "gesture not saved!");
@@ -176,4 +187,18 @@ public class SaveGestureActivity extends Activity  {
         gestures.addOnGestureListener(mGestureListener);
         resetEverything();
     }
+
+    private boolean checkExistingName(String name){
+
+        gLib = GestureLibraries.fromFile(getExternalFilesDir(null) + "/" + "gesture.txt");
+        gLib.load();
+        Set<String> gestureSet = gLib.getGestureEntries();
+        for(String gestureName : gestureSet){
+            if(gestureName.equalsIgnoreCase(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
